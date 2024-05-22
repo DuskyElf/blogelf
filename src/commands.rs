@@ -45,6 +45,7 @@ pub fn parse_args_io(
             fs::File::options()
                 .write(true)
                 .create(true)
+                .truncate(true)
                 .open(&inner)
                 .map_err(|err| &*format!("Couldn't open file '{inner}': {err}").leak())?,
         ) as Box<dyn io::Write>)
