@@ -17,6 +17,7 @@ fn main() {
 
 fn start() -> Result<(), String> {
     let mut commands: HashMap<&str, &dyn Command> = HashMap::new();
+    commands.insert("init", &init::Init);
     commands.insert("render", &render::Render);
     commands.insert("template", &template::Template);
 

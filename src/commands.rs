@@ -1,5 +1,6 @@
 use std::{borrow::BorrowMut, env, fs, io};
 
+pub mod init;
 pub mod render;
 pub mod template;
 
