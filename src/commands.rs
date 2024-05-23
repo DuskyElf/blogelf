@@ -9,13 +9,23 @@ pub trait Command {
     fn run(&self, args: env::Args) -> Result<(), &str>;
 }
 
+pub enum Input {
+    File(fs::File),
+    Stdin(io::Stdin),
+}
+
+pub enum Output {
+    File(fs::File),
+    Stdout(io::Stdout),
+}
+
 pub fn parse_args_io(
     mut args: env::Args,
 ) -> Result<
     (
-        Option<Box<dyn io::Read>>,  // input
-        Option<Box<dyn io::Write>>, // output
-        Vec<String>,                // rest_args
+        Input,
+        Output,
+        Vec<String>, // rest_args
     ),
     &'static str,
 > {
@@ -32,28 +42,53 @@ pub fn parse_args_io(
     }
 
     let input = if let Some(inner) = input {
-        Some(Box::new(
+        Input::File(
             fs::File::options()
                 .read(true)
                 .open(&inner)
                 .map_err(|err| &*format!("Couldn't open file '{inner}': {err}").leak())?,
-        ) as Box<dyn io::Read>)
+        )
     } else {
-        None
+        Input::Stdin(io::stdin())
     };
 
     let output = if let Some(inner) = output {
-        Some(Box::new(
+        Output::File(
             fs::File::options()
                 .write(true)
                 .create(true)
                 .truncate(true)
                 .open(&inner)
                 .map_err(|err| &*format!("Couldn't open file '{inner}': {err}").leak())?,
-        ) as Box<dyn io::Write>)
+        )
     } else {
-        None
+        Output::Stdout(io::stdout())
     };
 
     Ok((input, output, rest_args))
+}
+
+impl io::Read for Input {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        match *self {
+            Self::File(ref mut file) => file.read(buf),
+            Self::Stdin(ref mut stdin) => stdin.read(buf),
+        }
+    }
+}
+
+impl io::Write for Output {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        match *self {
+            Self::File(ref mut file) => file.write(buf),
+            Self::Stdout(ref mut stdin) => stdin.write(buf),
+        }
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        match *self {
+            Self::File(ref mut file) => file.flush(),
+            Self::Stdout(ref mut stdin) => stdin.flush(),
+        }
+    }
 }

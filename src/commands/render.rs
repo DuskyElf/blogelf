@@ -1,5 +1,9 @@
 use markdown;
-use std::{collections::HashMap, env};
+use std::{
+    collections::HashMap,
+    env,
+    io::{Read, Write},
+};
 
 use super::*;
 
@@ -16,9 +20,7 @@ pub struct Render;
 
 impl Command for Render {
     fn run(&self, args: env::Args) -> Result<(), &str> {
-        let (input, output, args) = parse_args_io(args)?;
-        let mut input = input.unwrap_or(Box::new(io::stdin()));
-        let mut output = output.unwrap_or(Box::new(io::stdout()));
+        let (mut input, mut output, args) = parse_args_io(args)?;
 
         // TODO: check for correct number of arguments
         let template_src_name = args.iter().next().ok_or("No template file provided")?;
