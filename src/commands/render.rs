@@ -17,7 +17,10 @@ pub fn render(input: &str, output: &str, template: &str) -> BlogELFResult {
         output,
         template::template_(
             &template_src_file,
-            HashMap::from([("title", "new_blog"), ("body", &markdown::to_html(&src))]),
+            HashMap::from([
+                ("title".to_string(), "new_blog".to_string()),
+                ("body".to_string(), markdown::to_html(&src)),
+            ]),
         ),
     )
     .map_err(|err| -> BlogELFError { format!("Couldn't write output: {err}").into() })?;

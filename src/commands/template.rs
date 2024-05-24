@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{BlogELFError, BlogELFResult};
 
-pub(crate) fn template_(src: &str, map: HashMap<&str, &str>) -> String {
+pub(crate) fn template_(src: &str, map: HashMap<String, String>) -> String {
     let mut src = src.to_string();
     for (k, v) in map {
         src = src.replace(&format!("${{{k}}}"), &v);
@@ -16,7 +16,7 @@ pub fn template(input: &str, output: &str, args: Vec<String>) -> BlogELFResult {
         .iter()
         .map(|v| {
             v.split_once('=')
-                .map(|(a, b)| (&*a.to_string().leak(), &*b.to_string().leak()))
+                .map(|(a, b)| (a.to_string(), b.to_string()))
         })
         .collect::<Option<HashMap<_, _>>>()
         .ok_or("Invalid template variable, use '<var>=<value>' format")?;
