@@ -1,23 +1,20 @@
 use std::fs;
 
+use crate::{BlogELFError, BlogELFResult};
+
 use super::*;
 
-pub struct New;
+pub fn new(name: String) -> BlogELFResult {
+    fs::create_dir(&name).map_err(|err| -> Box<dyn std::error::Error> {
+        format!("Couldn't create new directory '{name}': {err}").into()
+    })?;
 
-impl Command for New {
-    fn run(&self, mut args: env::Args) -> Result<(), &str> {
-        // TODO: check for correct number of arguments
-        let name = args.next().ok_or("No name provided")?;
-        fs::create_dir(&name)
-            .map_err(|err| &*format!("Couldn't create new directory '{name}': {err}").leak())?;
+    init::init(
+        std::env::current_dir()
+            .map_err(|_| -> BlogELFError { "Access to current directory".into() })?
+            .join(name)
+            .as_path(),
+    )?;
 
-        init::init(
-            env::current_dir()
-                .expect("Access to current directory")
-                .join(name)
-                .as_path(),
-        )?;
-
-        Ok(())
-    }
+    Ok(())
 }
