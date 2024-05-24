@@ -1,0 +1,12 @@
+[global] # global variables
+name = ${name}
+default_author = ${name}
+
+[config.build]
+index = "./index.html"
+artifacts_dir = "./build"
+
+[config.templates]
+blog = "./templates/blog.html"
+index = "./templates/index.html"
+
