@@ -23,6 +23,9 @@ enum SubCommand {
     /// Show a field from config
     Config { field: String },
 
+    /// Builds the blog system from current directory
+    Build,
+
     /// Render the project into a static site
     Render {
         /// The markdown file
@@ -57,6 +60,8 @@ fn main() {
         SubCommand::New { name } => commands::new(name),
 
         SubCommand::Config { field } => commands::config(&field),
+
+        SubCommand::Build => commands::build(),
 
         SubCommand::Render {
             input,

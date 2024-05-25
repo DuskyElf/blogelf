@@ -10,8 +10,9 @@ pub fn render(input: &str, output: &str, template: &str) -> BlogELFResult {
         format!("Couldn't open file '{template}': {err}").into()
     })?;
 
-    let src = std::fs::read_to_string(input)
-        .map_err(|err| -> BlogELFError { format!("Couldn't read input: {err}").into() })?;
+    let src = std::fs::read_to_string(input).map_err(|err| -> BlogELFError {
+        format!("Couldn't read input '{input}': {err}").into()
+    })?;
 
     std::fs::write(
         output,
@@ -23,7 +24,7 @@ pub fn render(input: &str, output: &str, template: &str) -> BlogELFResult {
             ]),
         ),
     )
-    .map_err(|err| -> BlogELFError { format!("Couldn't write output: {err}").into() })?;
+    .map_err(|err| -> BlogELFError { format!("Couldn't write output '{output}': {err}").into() })?;
 
     Ok(())
 }

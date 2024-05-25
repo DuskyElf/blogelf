@@ -1,9 +1,11 @@
+mod build;
 mod config;
 mod init;
 mod new;
 mod render;
 mod template;
 
+pub use build::build;
 pub use config::config;
 pub use init::init;
 pub use new::new;
