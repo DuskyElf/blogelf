@@ -1,12 +1,10 @@
-[global] # global variables
+src_dir = "./src"
+blog_tmpl = "./templates/blog.html"
+index_tmpl = "./templates/index.html"
+
+index_build = "./index.html"
+build_dir = "./build"
+
+[globals] # global variables
 name = ${name}
 default_author = ${name}
-
-[config.build]
-index = "./index.html"
-artifacts_dir = "./build"
-
-[config.templates]
-blog = "./templates/blog.html"
-index = "./templates/index.html"
-

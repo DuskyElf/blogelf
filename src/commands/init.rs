@@ -5,7 +5,7 @@ use crate::{BlogELFError, BlogELFResult};
 
 use super::*;
 
-const CONFIG_NAME: &str = "BlogElf.toml";
+pub const CONFIG_NAME: &str = "BlogElf.toml";
 static STATIC_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/static");
 
 pub fn init(path: &Path) -> BlogELFResult {

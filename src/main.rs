@@ -20,6 +20,9 @@ enum SubCommand {
     /// Create a new project in a new directory
     New { name: String },
 
+    /// Show a field from config
+    Config { field: String },
+
     /// Render the project into a static site
     Render {
         /// The markdown file
@@ -47,10 +50,14 @@ fn main() {
     let args = Args::parse();
 
     if let Err(e) = match args.subcmd {
-        SubCommand::Init => commands::init(&std::env::current_dir()
-            .expect("could not get current directory")),
+        SubCommand::Init => {
+            commands::init(&std::env::current_dir().expect("could not get current directory"))
+        }
 
         SubCommand::New { name } => commands::new(name),
+
+        SubCommand::Config { field } => commands::config(&field),
+
         SubCommand::Render {
             input,
             output,
